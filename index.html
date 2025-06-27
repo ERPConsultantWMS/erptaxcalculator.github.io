@@ -1,10 +1,26 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>ERP Tax Calculator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>ERP Tax Calculator</h1>
-  <p>More coming soon.</p>
+  <div class="container">
+    <h1>ERP Tax Calculator</h1>
+    <form id="calcForm">
+      <label>License cost per user ($): <input type="number" id="L1" value="8914"></label>
+      <label>Number of ERP users: <input type="number" id="N1" value="50"></label>
+      <label>Annual Maintenance %: <input type="number" id="M" value="21"></label>
+      <label>Tickets per user per month: <input type="number" id="Tm" value="0.3"></label>
+      <label>Average cost per ticket ($): <input type="number" id="Ct" value="16"></label>
+      <label>Change requests per year: <input type="number" id="CRn" value="12"></label>
+      <label>Cost per change request ($): <input type="number" id="Cc" value="1000"></label>
+      <button type="button" id="runCalc">Calculate ERP Tax</button>
+    </form>
+    <div id="result"></div>
+  </div>
+  <script src="calculator.js"></script>
 </body>
 </html>
