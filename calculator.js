@@ -14,66 +14,43 @@ document.getElementById('runCalc').addEventListener('click', () => {
   const changeCost  = CRn * Cc;
   const total       = maintenance + ticketCost + changeCost;
 
-  // Start building result HTML
-  let html = `
+  // Normalize each slider to a 0–1 scale
+  const norm = {
+    L1:  (L1  - 1000) / (20000 - 1000),
+    N1:  (N1  -    1) / (  500 -    1),
+    M:  ((M*100) -   5) / (  50 -    5),
+    Tm:  (Tm  -    0) / (    5 -    0),
+    Ct:  (Ct  -    5) / ( 100 -    5),
+    CRn: (CRn -    0) / (   50 -    0),
+    Cc:  (Cc  -  100) / (5000 -  100)
+  };
+
+  // Compute average severity (0–10)
+  const avg = Object.values(norm).reduce((sum, v) => sum + v, 0) / 7;
+  const severity = Math.round(avg * 10);
+
+  // Narrative templates 0–10
+  const narratives = [
+    "You’re at rock-bottom settings—this $50/year scenario is purely hypothetical; real ERPs never operate with such minimal costs.",
+    "Barely above zero—your ERP Tax remains toy-like, but even the smallest real environments exceed these figures.",
+    "Still negligible—real maintenance and support fees start climbing rapidly in live systems.",
+    "Low range—you’re safe for now, but typical costs begin to outpace these values quickly.",
+    "Below average—organizations usually see 30–50% higher tax rates than shown here.",
+    "Right at industry average—license fees (~$8.9k/user), ~21% maintenance, 0.3 tickets/mo, $16/ticket, 12 changes/yr, $1k/change—this is your true baseline.",
+    "Moderately above average—expect to pay measurably more for support and changes once past these mid-tier settings.",
+    "High range—you’re inching toward premium tiers; costs accelerate as you approach top market benchmarks.",
+    "Very high—your ERP Tax now resembles large-enterprise burdens; extra fees loom large.",
+    "Almost maxed out—brace yourself, you’re staring at severe ERP taxation rarely seen outside global deployments.",
+    "Max settings—this is the world of Fortune 100 ERP expenditures; maintenance, support, and change costs here are jaw-dropping."
+  ];
+
+  // Render result
+  document.getElementById('result').innerHTML = `
     <p>Your annual hidden <strong>ERP Tax</strong> is:</p>
-    <p style="font-size: 32px; color: #e35467;">$${total.toLocaleString()}</p>
+    <p style="font-size:32px;color:#e35467;">$${total.toLocaleString()}</p>
+    <div class="analysis">
+      <h3>Insight (Severity ${severity}/10):</h3>
+      <p>${narratives[severity]}</p>
+    </div>
   `;
-
-  // Collect any reality-check notes
-  const notes = [];
-
-  if (L1 === 1000) {
-    notes.push(
-      `<li><strong>License cost at $1,000/user</strong> is unrealistically low. Industry averages start around $7,200–9,000/user annually.</li>`
-    );
-  }
-  if (M === 0.05) {
-    notes.push(
-      `<li><strong>Maintenance at 5%</strong> is not feasible—OEM rates start at ~18–22% (SAP/Oracle) and third-party support around 9–11% of list price.</li>`
-    );
-  }
-  if (Tm === 0) {
-    notes.push(
-      `<li><strong>Zero support tickets/month</strong> is fantasy; even top IT shops log ~0.3 tickets/user/month on average.</li>`
-    );
-  }
-  if (CRn === 0) {
-    notes.push(
-      `<li><strong>Zero change requests/year</strong> doesn’t reflect reality; expect at least 1–2 tweaks per user annually.</li>`
-    );
-  }
-  if (Ct === 5) {
-    notes.push(
-      `<li><strong>$5 per ticket</strong> is below benchmarks—the average support ticket costs ~$16 to resolve.</li>`
-    );
-  }
-  if (Cc === 100) {
-    notes.push(
-      `<li><strong>$100 per change request</strong> is too low; typical ERP consultants bill $150–350/hr, making a single change request cost at least ~$250.</li>`
-    );
-  }
-
-  // Example max checks
-  if (L1 === 20000) {
-    notes.push(
-      `<li><strong>At $20,000/user</strong>, you’re near the high end of enterprise licenses (e.g., Oracle). Double-check you need that tier.</li>`
-    );
-  }
-  if (M === 0.50) {
-    notes.push(
-      `<li><strong>50% maintenance</strong> would be crippling—likely a configuration error.</li>`
-    );
-  }
-
-  // Append notes if any
-  if (notes.length) {
-    html += `<div class="analysis"><h3>Reality Check:</h3><ul>`;
-    html += notes.join("");
-    html += `</ul></div>`;
-  }
-
-  // Render
-  document.getElementById('result').innerHTML = html;
 });
-
