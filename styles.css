@@ -45,7 +45,6 @@ input[type="range"]::-webkit-slider-thumb {
   background: #e35467;
   cursor: pointer;
 }
-
 input[type="range"]::-moz-range-thumb {
   width: 16px;
   height: 16px;
@@ -75,9 +74,7 @@ button {
 
 #result {
   margin-top: 30px;
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 18px;
+  line-height: 1.5;
   color: #1a1a1a;
 }
-
-
